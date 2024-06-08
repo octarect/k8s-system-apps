@@ -1,0 +1,19 @@
+resources:
+  - ../../base/monitoring
+
+patches:
+  # monitoring
+  - target:
+      kind: Ingress
+      name: prometheus
+    patch: |-
+      - op: replace
+        path: /spec/rules/0/host
+        value: example.com
+  - target:
+      kind: Ingress
+      name: grafana
+    patch: |-
+      - op: replace
+        path: /spec/rules/0/host
+        value: example.com

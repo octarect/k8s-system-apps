@@ -1,0 +1,12 @@
+# /etc/grafana/provisioning/dashboards/config.yml
+apiVersion: 1
+providers:
+- name: 'default'
+  orgId: 1
+  folder: ''
+  type: file
+  disableDeletion: true
+  editable: true
+  updateIntervalSeconds: 60
+  options:
+    path: /etc/grafana/provisioning/dashboards

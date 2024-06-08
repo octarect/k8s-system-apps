@@ -1,0 +1,13 @@
+resources:
+  - rbac.yaml
+  - deployment.yaml
+  - service.yaml
+  - ingress.yaml
+configMapGenerator:
+  - name: prometheus-config
+    files:
+      - config/prometheus.yml
+  - name: prometheus-rules
+    files:
+      - config/rules/global.rules.yml
+      - config/rules/node-exporter.rules.yml

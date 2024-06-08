@@ -1,0 +1,2 @@
+manifests/overlays/*
+!manifests/overlays/example

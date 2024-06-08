@@ -1,0 +1,13 @@
+resources:
+  - deployment.yaml
+  - service.yaml
+  - ingress.yaml
+
+configMapGenerator:
+  - name: grafana-datasources
+    files:
+      - config/datasources/default.yml
+  - name: grafana-dashboards
+    files:
+      - config/dashboards/config.yml
+      - config/dashboards/node-exporter.json
