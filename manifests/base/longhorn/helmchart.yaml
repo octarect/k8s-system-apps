@@ -1,0 +1,19 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: longhorn
+spec:
+  chart: longhorn
+  repo: https://charts.longhorn.io
+  targetNamespace: longhorn-system
+  createNamespace: true
+  valuesContent: |-
+    defaultSettings:
+      defaultReplicaCount: 2
+      storageReservedPercentageForDefaultDisk: 0
+    persistence:
+      defaultClassReplicaCount: 2
+    annotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "9500"
+      prometheus.io/path: "/metrics"
