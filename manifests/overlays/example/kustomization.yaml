@@ -1,5 +1,4 @@
 resources:
-  - ../../base/longhorn
   - ../../base/monitoring
 
 patches:
@@ -18,13 +17,3 @@ patches:
       - op: replace
         path: /spec/rules/0/host
         value: example.com
-  # longhorn
-  - target:
-      kind: HelmChart
-      name: longhorn
-    patch: |-
-      - op: add
-        path: /spec/set
-        value:
-          ingress.enabled: "true"
-          ingress.host: example.com

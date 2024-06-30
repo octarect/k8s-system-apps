@@ -1,4 +1,0 @@
-namespace: kube-system
-resources:
-  - helmchart.yaml
-  - storageclass.yaml
