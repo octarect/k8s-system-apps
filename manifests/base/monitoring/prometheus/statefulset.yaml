@@ -1,16 +1,15 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
+  name: prometheus
   labels:
     app: prometheus
-  name: prometheus
 spec:
   replicas: 1
-  strategy:
-    type: Recreate
   selector:
     matchLabels:
       app: prometheus
+  serviceName: prometheus
   template:
     metadata:
       annotations:
@@ -31,7 +30,7 @@ spec:
           mountPath: /etc/prometheus
         - name: rules
           mountPath: /etc/prometheus/rules
-        - name: data
+        - name: prometheus-data
           mountPath: /prometheus
       restartPolicy: Always
       securityContext:
@@ -47,6 +46,5 @@ spec:
       - name: rules
         configMap:
           name: prometheus-rules
-      - name: data
-        persistentVolumeClaim:
-          claimName: prometheus-data
+  # NOTE: Add a template for prometheus-data
+  volumeClaimTemplates: []

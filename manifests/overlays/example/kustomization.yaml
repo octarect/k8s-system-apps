@@ -9,11 +9,26 @@ patches:
     patch: |-
       - op: replace
         path: /spec/rules/0/host
-        value: example.com
+        value: grafana.example.com
   - target:
       kind: Ingress
       name: grafana
     patch: |-
       - op: replace
         path: /spec/rules/0/host
-        value: example.com
+        value: grafana.example.com
+  # Persistence
+  - target:
+      kind: StatefulSet
+      name: prometheus
+    patch: |-
+      - op: add
+        path: /spec/volumeClaimTemplates/-
+        value:
+          metadata:
+            name: prometheus-data
+          spec:
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 16Gi

@@ -1,6 +1,6 @@
 resources:
   - rbac.yaml
-  - deployment.yaml
+  - statefulset.yaml
   - service.yaml
   - ingress.yaml
 configMapGenerator:
