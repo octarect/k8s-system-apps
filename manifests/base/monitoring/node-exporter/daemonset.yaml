@@ -31,6 +31,8 @@ spec:
         - "/host/sys"
         - "--collector.filesystem.ignored-mount-points"
         - '"^/(sys|proc|dev|host|etc)($|/)"'
+        - "--collector.textfile.directory"
+        - "/run/prometheus"
         ports:
         - containerPort: 9100
           protocol: TCP
@@ -45,6 +47,32 @@ spec:
           mountPath: /host/sys
         - name: rootfs
           mountPath: /rootfs
+        - name: textfiles
+          mountPath: /run/prometheus
+          readOnly: true
+      - name: crond
+        image: ghcr.io/octarect/ops:2024-06-23
+        imagePullPolicy: IfNotPresent
+        command: ["/usr/sbin/crond", "-f"]
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: dev
+          mountPath: /host/dev
+        - name: proc
+          mountPath: /host/proc
+        - name: sys
+          mountPath: /host/sys
+        - name: rootfs
+          mountPath: /rootfs
+        - name: textfiles
+          mountPath: /run/prometheus
+        - name: crontabs
+          mountPath: /var/spool/cron/crontabs
+          readOnly: true
+        - name: scripts
+          mountPath: /usr/local/bin
+          readOnly: true
       volumes:
       - name: dev
         hostPath:
@@ -58,3 +86,12 @@ spec:
       - name: rootfs
         hostPath:
           path: /
+      - name: textfiles
+        emptyDir: {}
+      - name: crontabs
+        configMap:
+          name: node-exporter-crontabs
+      - name: scripts
+        configMap:
+          name: node-exporter-scripts
+          defaultMode: 0755
