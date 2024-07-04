@@ -22,7 +22,7 @@ spec:
       hostNetwork: true
       containers:
       - name: node-exporter
-        image: quay.io/prometheus/node-exporter:v1.3.0
+        image: quay.io/prometheus/node-exporter:v1.8.1
         imagePullPolicy: IfNotPresent
         args:
         - "--path.procfs"
