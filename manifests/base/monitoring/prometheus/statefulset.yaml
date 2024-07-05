@@ -3,12 +3,12 @@ kind: StatefulSet
 metadata:
   name: prometheus
   labels:
-    app: prometheus
+    app.kubernetes.io/name: prometheus
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: prometheus
+      app.kubernetes.io/name: prometheus
   serviceName: prometheus
   template:
     metadata:
@@ -16,7 +16,7 @@ spec:
         prometheus.io/scrape: "true"
         prometheus.io/port: "9090"
       labels:
-        app: prometheus
+        app.kubernetes.io/name: prometheus
     spec:
       containers:
       - image: quay.io/prometheus/prometheus:v2.31.0
