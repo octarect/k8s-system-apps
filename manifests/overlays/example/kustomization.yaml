@@ -2,18 +2,14 @@ resources:
   - ../../base/monitoring
 
 patches:
-  # monitoring
   - target:
-      kind: Ingress
-      name: prometheus
+      kind: HelmChart
+      name: kube-prometheus-stack
     patch: |-
-      - op: replace
-        path: /spec/rules/0/host
-        value: example.com
-  - target:
-      kind: Ingress
-      name: grafana
-    patch: |-
-      - op: replace
-        path: /spec/rules/0/host
-        value: example.com
+      - op: add
+        path: /spec/set
+        value:
+          grafana.ingress.enabled: "true"
+          grafana.ingress.hosts[0]: grafana.example.com
+          prometheus.ingress.enabled: "true"
+          prometheus.ingress.hosts[0]: prometheus.example.com

@@ -1,5 +1,31 @@
-namespace: monitoring
 resources:
-  - node-exporter
-  - prometheus
-  - grafana
+  - helmchart.yaml
+  - ns.yaml
+  - dashboards
+
+# Set namespace for resources other than HelmChart and HelmChart belongs to kube-system.
+transformers:
+  - |-
+    apiVersion: builtin
+    kind: NamespaceTransformer
+    metadata:
+      name: monitoring-ns-transformer
+      namespace: monitoring
+    fieldSpecs:
+    - kind: Namespace
+      path: /metadata/name
+      create: true
+    - kind: HelmChart
+      path: /spec/targetNamespace
+      create: true
+  - |-
+    apiVersion: builtin
+    kind: PatchTransformer
+    metadata:
+      name: undefined
+    target:
+      kind: HelmChart
+    patch: |-
+      - op: replace
+        path: /metadata/namespace
+        value: kube-system

@@ -1,8 +1,0 @@
-groups:
-- name: node-exporter.rules
-  rules:
-  - alert: LowDiskSpace
-    expr: node_file_system_avail_bytes / node_filesystem_size_bytes < 0.2 OR node_file_system_avail_bytes / 1024^3 < 10
-    for: 5m
-    labels:
-      severity: warning

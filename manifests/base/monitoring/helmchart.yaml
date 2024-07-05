@@ -1,0 +1,35 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: kube-prometheus-stack
+spec:
+  chart: kube-prometheus-stack
+  repo: https://prometheus-community.github.io/helm-charts
+  valuesContent: |-
+    crds:
+      enabled: false
+    grafana:
+      dashboardProviders:
+        dashboard_config.yml:
+          apiVersion: 1
+          providers:
+          - name: default
+            orgId: 1
+            folder: ""
+            type: file
+            disableDeletion: true
+            editable: true
+            options:
+              path: /var/lib/grafana/dashboards/default
+      env:
+        GF_AUTH_ANONYMOUS_ENABLED: "true"
+        GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+      resources:
+        requests:
+          cpu: 250m
+          memory: 750m
+      sidecar:
+        dashboards:
+          enabled: true
+        datasources:
+          enabled: true
