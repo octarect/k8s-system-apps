@@ -1,0 +1,11 @@
+resources:
+  - daemonset.yaml
+  - servicemonitor.yaml
+
+configMapGenerator:
+  - name: node-exporter-crontabs
+    files:
+      - crontabs/root
+  - name: node-exporter-scripts
+    files:
+      - scripts/lvm-prom-collector

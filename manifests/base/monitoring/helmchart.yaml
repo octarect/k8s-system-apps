@@ -33,3 +33,5 @@ spec:
           enabled: true
         datasources:
           enabled: true
+    nodeExporter:
+      enabled: false

@@ -1,0 +1,2 @@
+# vi: noexpandtab ts=4 sw=4
+*/5	*	*	*	*	bash lvm-prom-collector -gpst > /run/prometheus/lvm-prom-collector.prom

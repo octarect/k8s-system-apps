@@ -2,6 +2,7 @@ resources:
   - helmchart.yaml
   - ns.yaml
   - dashboards
+  - node-exporter
 
 # Set namespace for resources other than HelmChart and HelmChart belongs to kube-system.
 transformers:

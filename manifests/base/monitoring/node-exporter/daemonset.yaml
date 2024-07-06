@@ -1,0 +1,105 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-exporter
+  labels:
+    app.kubernetes.io/name: node-exporter
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: node-exporter
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: node-exporter
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9100"
+        prometheus.io/path: "/metrics"
+    spec:
+      hostPID: true
+      hostIPC: true
+      hostNetwork: true
+      containers:
+      - name: node-exporter
+        image: quay.io/prometheus/node-exporter:v1.8.1
+        imagePullPolicy: IfNotPresent
+        args:
+        - "--path.procfs"
+        - "/host/proc"
+        - "--path.sysfs"
+        - "/host/sys"
+        - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|var/lib/docker/.+|var/lib/kubelet/.+)($|/)
+        - --collector.filesystem.fs-types-exclude=^(autofs|binfmt_misc|bpf|cgroup2?|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|iso9660|mqueue|nsfs|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|selinuxfs|squashfs|sysfs|tracefs)$
+        - "--collector.textfile.directory"
+        - "/run/prometheus"
+        ports:
+        - containerPort: 9100
+          protocol: TCP
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: dev
+          mountPath: /host/dev
+          readOnly: true
+        - name: proc
+          mountPath: /host/proc
+          readOnly: true
+        - name: sys
+          mountPath: /host/sys
+          readOnly: true
+        - name: rootfs
+          mountPath: /rootfs
+          readOnly: true
+        - name: textfiles
+          mountPath: /run/prometheus
+          readOnly: true
+      - name: cron
+        image: ghcr.io/octarect/ops:2024-06-23
+        imagePullPolicy: IfNotPresent
+        command: ["/usr/sbin/crond", "-f"]
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: dev
+          mountPath: /host/dev
+          readOnly: true
+        - name: proc
+          mountPath: /host/proc
+          readOnly: true
+        - name: sys
+          mountPath: /host/sys
+          readOnly: true
+        - name: rootfs
+          mountPath: /rootfs
+          readOnly: true
+        - name: crontabs
+          mountPath: /var/spool/cron/crontabs
+          readOnly: true
+        - name: scripts
+          mountPath: /usr/local/bin
+          readOnly: true
+        - name: textfiles
+          mountPath: /run/prometheus
+      volumes:
+      - name: dev
+        hostPath:
+          path: /dev
+      - name: proc
+        hostPath:
+          path: /proc
+      - name: sys
+        hostPath:
+          path: /sys
+      - name: rootfs
+        hostPath:
+          path: /
+      - name: textfiles
+        emptyDir: {}
+      - name: crontabs
+        configMap:
+          name: node-exporter-crontabs
+      - name: scripts
+        configMap:
+          name: node-exporter-scripts
+          defaultMode: 0755
