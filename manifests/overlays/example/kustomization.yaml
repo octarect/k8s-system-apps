@@ -11,12 +11,14 @@ patches:
         path: /spec/rules/0/host
         value: grafana.example.com
   - target:
-      kind: Ingress
+      kind: HelmChart
       name: grafana
     patch: |-
-      - op: replace
-        path: /spec/rules/0/host
-        value: grafana.example.com
+      - op: add
+        path: /spec/set
+        value:
+          ingress.enabled: "true"
+          ingress.hosts[0]: grafana.example.com
   # Persistence
   - target:
       kind: StatefulSet

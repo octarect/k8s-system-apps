@@ -1,0 +1,8 @@
+configMapGenerator:
+  - name: grafana-dashboard-node-exporter
+    files:
+      - node-exporter.json
+
+generatorOptions:
+  labels:
+    grafana_dashboard: "1"

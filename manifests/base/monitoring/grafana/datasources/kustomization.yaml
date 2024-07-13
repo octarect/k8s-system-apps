@@ -1,0 +1,8 @@
+configMapGenerator:
+  - name: grafana-datasource-prometheus
+    files:
+      - prometheus.yml
+
+generatorOptions:
+  labels:
+    grafana_datasource: "true"

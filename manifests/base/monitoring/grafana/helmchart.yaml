@@ -1,0 +1,30 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: grafana
+spec:
+  chart: grafana
+  repo: https://grafana.github.io/helm-charts
+  valuesContent: |-
+    dashboardProviders:
+      dashboard_config.yml:
+        apiVersion: 1
+        providers:
+        - name: default
+          orgId: 1
+          folder: ""
+          type: file
+          options:
+            path: /var/lib/grafana/dashboards/default
+    env:
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+    resources:
+      requests:
+        cpu: 250m
+        memory: 750m
+    sidecar:
+      dashboards:
+        enabled: true
+      datasources:
+        enabled: true
